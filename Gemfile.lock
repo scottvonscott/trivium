@@ -8,6 +8,7 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     rake (12.3.3)
+    unicode (0.4.4.4)
 
 PLATFORMS
   ruby
@@ -16,6 +17,7 @@ DEPENDENCIES
   json
   pry
   rake (~> 12.0)
+  unicode (~> 0.4.4.2)
 
 BUNDLED WITH
    2.1.4
