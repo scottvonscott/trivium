@@ -1,6 +1,15 @@
-require "trivium/version"
+#require gems we will use
+#require all lib files
 
-module Trivium
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require 'pry'
+require 'net/http'
+require 'json'
+
+
+
+require_relative "./trivium/api"
+require_relative "./trivium/cli"
+require_relative "./trivium/category"
+require_relative "./trivium/question"
+require_relative "./trivium/game"
+
