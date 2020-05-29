@@ -10,20 +10,24 @@ class CLI
     end
 
     def menu
-        puts "\nAre you ready to play?"
-        puts "Enter 'yes' or 'y' to continue, 'no' or 'n' to quit"
+        
+        puts "\nTrivium Controls: YES or NO menu selections can be chosen with 'yes','y','no', or 'n'. Easy right?"
+        puts "\nAre you ready to play? (test the controls now...)"
         user_input = gets.strip.downcase
         if user_input == "yes" || user_input == "y"
             game_options
+        elsif user_input == "no" || user_input == "n"
+            puts "\nGoodbye!"
         else
-            puts "\nOk, fine then."
+            puts "\nRead your documentation you putz. Let's try again..."
+            menu
         end
 
     end
 
     def game_options
         valid_choices = ['easy','medium','hard']
-        puts "\nWhat difficulty would you like to play at?"
+        puts "\nGreat! What difficulty would you like to play at?"
         puts "Please enter 'easy', 'medium', or 'hard'"
         user_input = gets.strip.downcase
         if valid_choices.include?(user_input)

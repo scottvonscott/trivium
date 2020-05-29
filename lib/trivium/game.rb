@@ -24,16 +24,24 @@ class Game
     end
 
     def missed_questions
-        @missed_questions.each.with_index do |question|
+        @missed_questions.each.with_index(1) do |question, index|
             puts "#{index}. #{question}"
         end
+        puts "Press enter to continue"
+            gets.strip
+            start_over
     end
 
     def results
         puts "\nYour score is #{@score} out of #{Question.all.size}"
         puts "\nWould you like to see questions you answered incorrectly? Seems like a good chance to learn more!"
-    
-        start_over
+            user_input = gets.strip.downcase
+            if user_input == "yes" || user_input == "y"
+                missed_questions
+            else
+                puts "\nOk, fine then."
+            start_over
+        end
     end
 
     def start_over
@@ -75,6 +83,7 @@ class Game
             if options[user_input] == question.correct_answer
                 @score = @score + 1
                 puts "\nCORRECT!"
+                puts "\nGood job, NERD!"
                 puts "Press enter to continue."
                 gets.strip
                 puts "-------------------------------------------------------------------------------"

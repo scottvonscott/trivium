@@ -34,3 +34,5 @@ end
 
 # API Call with Encode Type (urlLegacy, url3986, base64):
 # https://opentdb.com/api.php?amount=10&encode=url3986
+
+
