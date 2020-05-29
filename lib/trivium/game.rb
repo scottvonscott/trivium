@@ -2,14 +2,14 @@ class Game
 
     attr_accessor :score, :turn, :difficulty, :missed_questions
 
-    def initialize(difficulty)
+    def initialize(difficulty, amount, category)
         @score = 0
         @turn = 1
         @missed_questions = []
-        API.get_trivia(difficulty)
+        API.get_trivia(difficulty, amount, category)
         puts "-------------------------------------------------------------------------------"
         puts "\nA new game has started!"
-        puts "\nYou're playing on #{difficulty}? Ok... if you say so."
+        puts "\nYou're playing on #{difficulty}, with #{amount} questions from the #{category} category? Ok... if you say so."
             puts "Press enter to continue"
             gets.strip
             play(Question.all)
