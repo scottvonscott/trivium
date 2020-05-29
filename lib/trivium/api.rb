@@ -3,10 +3,10 @@ class API
 
 
     def self.get_trivia(difficulty)
-        if difficulty == "medium"
-             url = "https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple"
-        elsif difficulty == "easy"
-            url = "https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple"
+        if difficulty == "easy"
+            url = "https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple&encode=base64"
+        elsif difficulty == "medium"
+            url = "https://opentdb.com/api.php?amount=10&difficulty=medium&type=multiple"
         elsif difficulty == "hard"
             url = "https://opentdb.com/api.php?amount=10&difficulty=hard&type=multiple"
         end
@@ -16,13 +16,17 @@ class API
         array_of_questions = hash["results"]
 
         array_of_questions.collect do |question_hash|
-            Question.new(text: question_hash["question"], category: question_hash["category"], difficulty: question_hash["difficulty"], correct_answer: question_hash["correct_answer"], incorrect_answers: question_hash["incorrect_answers"])
+            decoded_array = []
+            question_hash["incorrect_answers"].each do |answer|
+                decoded_array << Base64.decode64(answer)
+            end
+            Question.new(text: Base64.decode64(question_hash["question"]), category: Base64.decode64(question_hash["category"]), difficulty: Base64.decode64(question_hash["difficulty"]), correct_answer: Base64.decode64(question_hash["correct_answer"]), incorrect_answers: decoded_array)
         end
 
         #initialize new question
         #assign attributes
         
-    
+        
 
 
 

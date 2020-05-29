@@ -1,25 +1,20 @@
 class CLI
-    #interact with user
-    #include any puts or gets
-    #control da flow
-
 
     def start
         puts "\nWelcome to the world's most basic trivia game!!!"
-        self.menu
+        menu
     end
 
     def menu
-        
-        puts "\nTrivium Controls: YES or NO menu selections can be chosen with 'yes','y','no', or 'n'. Easy right?"
-        puts "\nAre you ready to play? (test the controls now...)"
+        puts "\nTrivium Controls: YES or NO menu selections can be chosen with 'yes','y','no', or 'n'."
+        puts "\nAre you ready to play?"
         user_input = gets.strip.downcase
         if user_input == "yes" || user_input == "y"
             game_options
         elsif user_input == "no" || user_input == "n"
             puts "\nGoodbye!"
         else
-            puts "\nRead your documentation you putz. Let's try again..."
+            puts "\nGet your cat off the keyboard... please enter a valid option!"
             menu
         end
 
@@ -34,13 +29,12 @@ class CLI
             @difficulty = user_input
             play_game
         else
-            puts "\nPlease enter a valid option"
+            puts "\nGet your cat off the keyboard... please enter a valid option!"
             game_options
         end
     end
 
     def play_game
-        puts "\nLet's do it!"
         Game.new(@difficulty)
     end
 end

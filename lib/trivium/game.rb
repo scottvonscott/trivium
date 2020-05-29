@@ -7,7 +7,7 @@ class Game
         @turn = 1
         @missed_questions = []
         API.get_trivia(difficulty)
-        
+        puts "-------------------------------------------------------------------------------"
         puts "\nA new game has started!"
         puts "\nYou're playing on #{difficulty}? Ok... if you say so."
             puts "Press enter to continue"
@@ -15,12 +15,8 @@ class Game
             play(Question.all)
     end
 
-    def score
-        @score
-    end
-
-    def turn
-        @turn
+    def log_missed_question(question)
+        @missed_questions << question
     end
 
     def missed_questions
@@ -32,9 +28,9 @@ class Game
             start_over
     end
 
-    def results
+    def game_results
         puts "\nYour score is #{@score} out of #{Question.all.size}"
-        puts "\nWould you like to see questions you answered incorrectly? Seems like a good chance to learn more!"
+        puts "\nWould you like to see questions you answered incorrectly? Find out what else you can learn!"
             user_input = gets.strip.downcase
             if user_input == "yes" || user_input == "y"
                 missed_questions
@@ -90,7 +86,7 @@ class Game
 
             
             else 
-                @missed_questions << question.text
+                log_missed_question(question.text)
                 puts "\nINCORRECT!"
                 puts "\nThe correct answer was #{question.correct_answer}"
                 puts "\nMaybe you're not great with #{question.category}..."
@@ -102,14 +98,11 @@ class Game
                 @turn = @turn + 1
         
     end
+    puts "-------------------------------------------------------------------------------"
     puts "\nGAME OVER"
     puts "Press enter to see your score"
     gets.strip
-    results
+    game_results
 end
-
-
-        
-    
 
 end
