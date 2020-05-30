@@ -1,65 +1,34 @@
 class Game
 
-    attr_accessor :score, :turn, :difficulty, :missed_questions
+    attr_accessor :player, :score, :turn, :difficulty, :missed_questions
 
-    def initialize(difficulty, amount, category)
+    def initialize(player, difficulty, amount, category)
         @score = 0
         @turn = 1
         @missed_questions = []
+        self.player=(player)
         API.get_trivia(difficulty, amount, category)
-        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        puts "A NEW GAME HAS STARTED!"
-            puts "\nPress enter to continue"
-            gets.strip
-            play(Question.all)
     end
 
-    def continue_quit
-        puts "\nPress enter to continue"
-        puts "\nType 'quit' to quit Trivium"
-        user_input = gets.strip.downcase
-        if user_input == 'quit'
-            exit!
-        else
-        end
+    def player=(player)
+        @player = player
+        player.add_game.(self)
     end
+
 
     def log_missed_question(question)
         @missed_questions << question
     end
 
-    def missed_questions
-        @missed_questions.each.with_index(1) do |question, index|
-            puts "\n#{index}. #{question}"
-        end
-        puts "\nPress enter to continue"
-            gets.strip
-            start_over
+    def turn
+        @turn
     end
 
-    def game_results
-        puts "\nYour score is #{@score} out of #{Question.all.size}"
-        puts "\nWould you like to see questions you answered incorrectly? Find out what else you can learn!"
-            user_input = gets.strip.downcase
-            if user_input == "yes" || user_input == "y"
-                missed_questions
-            else
-                puts "\nOk, fine then."
-            start_over
-            end
+    def score
+        @score
     end
 
-    def start_over
-        puts "\nWould you like to play again?"
-        user_input = gets.strip.downcase
-            if user_input == "yes" || user_input == "y"
-                puts "TRIVIA IS LIFE"
-                Question.destroy_all
-                CLI.new.start
-            else
-                puts "OK, fine then...."
-            end
-    end
+    
 
     def randomize_answers(correct, incorrect)
         randomized = []
@@ -72,39 +41,6 @@ class Game
             end 
     end
 
-    def play (questions)
-    questions.each do |question|
-        puts "---------------------------------------------------------------------------------------"
-        puts  "\nQuestion #{@turn}..."
-        puts "--------------------"
-        puts question.text.upcase
-        puts "\nChoose your answer below:"
-        puts "--------------------"
-        options = randomize_answers(question.correct_answer, question.incorrect_answers)
-        puts "--------------------"
-        puts "\nEnter your answer now (as a number)"
-        user_input = gets.strip.to_i - 1
-            if options[user_input] == question.correct_answer
-                @score = @score + 1
-                puts Rainbow("\nCORRECT!").green
-                puts "\nGood job, NERD!"
-                continue_quit
-                puts "---------------------------------------------------------------------------------------"
-            else 
-                log_missed_question(question.text)
-                puts Rainbow("\nINCORRECT!").red
-                puts "\nThe correct answer was #{question.correct_answer}"
-                puts "\nMaybe you're not great with #{question.category}..."
-                continue_quit
-                puts "---------------------------------------------------------------------------------------"
-            end
-                @turn = @turn + 1
-    end
-    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-    puts "\nGAME OVER"
-    puts "Press enter to see your score"
-    gets.strip
-    game_results
-end
+    
 
 end
