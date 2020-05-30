@@ -7,10 +7,9 @@ class Game
         @turn = 1
         @missed_questions = []
         API.get_trivia(difficulty, amount, category)
-        puts "-------------------------------------------------------------------------------"
-        puts "\nA new game has started!"
-        puts "\nYou're playing on #{difficulty}, with #{amount} questions from the #{category} category? Ok... if you say so."
-            puts "Press enter to continue"
+        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        puts "A NEW GAME HAS STARTED!"
+            puts "\nPress enter to continue"
             gets.strip
             play(Question.all)
     end
@@ -21,9 +20,9 @@ class Game
 
     def missed_questions
         @missed_questions.each.with_index(1) do |question, index|
-            puts "#{index}. #{question}"
+            puts "\n#{index}. #{question}"
         end
-        puts "Press enter to continue"
+        puts "\nPress enter to continue"
             gets.strip
             start_over
     end
@@ -37,7 +36,7 @@ class Game
             else
                 puts "\nOk, fine then."
             start_over
-        end
+            end
     end
 
     def start_over
@@ -63,13 +62,12 @@ class Game
             end 
     end
 
-
     def play (questions)
     questions.each do |question|
-        puts "-------------------------------------------------------------------------------"
+        puts "---------------------------------------------------------------------------------------"
         puts  "\nQuestion #{@turn}..."
         puts "--------------------"
-        puts question.text
+        puts question.text.upcase
         puts "\nChoose your answer below:"
         puts "--------------------"
         options = randomize_answers(question.correct_answer, question.incorrect_answers)
@@ -82,9 +80,7 @@ class Game
                 puts "\nGood job, NERD!"
                 puts "Press enter to continue."
                 gets.strip
-                puts "-------------------------------------------------------------------------------"
-
-            
+                puts "---------------------------------------------------------------------------------------"
             else 
                 log_missed_question(question.text)
                 puts "\nINCORRECT!"
@@ -92,13 +88,11 @@ class Game
                 puts "\nMaybe you're not great with #{question.category}..."
                 puts "\nPress enter to continue"
                 gets.strip
-                puts "-------------------------------------------------------------------------------"
-
+                puts "---------------------------------------------------------------------------------------"
             end
                 @turn = @turn + 1
-        
     end
-    puts "-------------------------------------------------------------------------------"
+    puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     puts "\nGAME OVER"
     puts "Press enter to see your score"
     gets.strip
