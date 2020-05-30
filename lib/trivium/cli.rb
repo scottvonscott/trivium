@@ -1,39 +1,47 @@
 class CLI
 
-    attr_accessor :player_name
-
     def start
-        puts "======================================================================================="
+        line_border
         puts "\nWELCOME TO THE WORLD'S MOST BASIC TRIVIA GAME!!!"
-        API.get_categories
-        Category.new(id: 0, name: "Mixed")
-        puts "\nPlease enter your player name"
-        user_input = gets.strip.downcase
-        @player_name = user_input    
+        sort_categories
+        choose_player
         menu
     end
 
+    def choose_player
+        puts "\nPlease enter your player name"
+        user_input = gets.strip.upcase
+        @player_name = Rainbow(user_input).cyan
+        @player = Player.find_or_create_by_name(@player_name)
+    end
+
     def menu
-        binding.pry
+        puts "\nWelcome #{@player_name}!"
         puts "\nTRIVIUM CONTROLS: YES or NO menu selections can be chosen with 'yes','y','no', or 'n'."
         puts "\nAre you ready to play #{@player_name}?"
-        user_input = gets.strip.downcase
-        if user_input == "yes" || user_input == "y"
-            game_options
-        elsif user_input == "no" || user_input == "n"
-            puts "\nGoodbye #{@player_name}!"
-        else
-            puts "\nGet your cat off the keyboard... please enter a valid option!"
-            menu
-        end
+        user_input = 0
+            until ['yes','y','n','no'].include? user_input do
+                puts "Please enter a valid option."
+                user_input = gets.strip.downcase
+            end
+            if user_input == "yes" || user_input == "y"
+                game_options
+            else 
+                puts "\nGoodbye #{@player_name}!"
+            end
 
     end
 
+    def sort_categories
+        API.get_categories
+        Category.new(id: 0, name: "Mixed")
+         @sorted_array = Category.all.sort_by do |category|
+                category.name
+            end
+        end
+
 
     def list_categories
-        @sorted_array = Category.all.sort_by do |category|
-            category.name
-        end
         @sorted_array.each.with_index(1) do |category, index|
             puts "#{index}. #{category.name}"
         end
@@ -47,7 +55,7 @@ class CLI
     end
 
     def choose_difficulty
-        puts "======================================================================================="
+        line_border
         puts "CHOOSE YOUR DIFFICULTY"
         valid_difficulty = ['easy','medium','hard']
         puts "\nWhat difficulty would you like to play at?"
@@ -62,7 +70,7 @@ class CLI
     end
 
     def choose_question_amount
-        puts "======================================================================================="
+        line_border
         puts "CHOOSE YOUR QUESTION COUNT"
         valid_amount = (1..25)
         puts "\nHow many questions would you like in your game? Choose up to 25"
@@ -76,7 +84,7 @@ class CLI
     end
 
     def choose_category
-        puts "======================================================================================="
+        line_border
         puts "CHOOSE YOUR CATEGORY... OR DON'T"
         valid_category = ["list", "mixed"]
         puts "\nWould you like to choose a single category for the game?"
@@ -86,7 +94,7 @@ class CLI
                 if user_input == 'list'
                     list_categories
                     puts "Please choose the number of the desired category"
-                        valid_choice = (1..24)
+                        valid_choice = (1..25)
                         user_input = gets.strip.to_i
                         if valid_choice.include?(user_input)
                             @category = @sorted_array[user_input-1].id
@@ -113,7 +121,7 @@ class CLI
     end
 
     def confirm_options
-        puts "======================================================================================="
+        line_border
         puts "CONFIRM YOUR CHOICES"
         puts "\nYou're playing on #{@difficulty}, with #{@amount} questions from the #{id_name(@category)} category? Are you sure, #{@player_name}?"
             puts "\nType 'back' to choose again"
@@ -126,91 +134,131 @@ class CLI
     end
 
     def start_game
-        Player.find_or_create_by_name(@player_name)
-        Game.new(@player_name, @difficulty, @amount, @category)
-        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        @game_number = "Game #{@player.games.size + 1}"
+        @current_game = Game.new(@game_number, @player, @difficulty, @amount, @category)
+        squiggle_border
         puts "A NEW GAME HAS STARTED!"
-            puts "\nPress enter to continue"
-            gets.strip
+            continue
             play(Question.all)
     end
 
-    def continue_quit
+    def continue
         puts "\nPress enter to continue"
-        puts "\nType 'quit' to quit Trivium"
-        user_input = gets.strip.downcase
-        if user_input == 'quit'
-            exit!
-        else
-        end
+        gets.strip
     end
 
     def play(questions)
         questions.each do |question|
-            puts "---------------------------------------------------------------------------------------"
-            puts  "\nQuestion #{@turn}..."
+            line_border
+            puts  "\nQuestion #{@current_game.turn}..."
             puts "--------------------"
             puts question.text.upcase
             puts "\nChoose your answer below:"
             puts "--------------------"
-            options = randomize_answers(question.correct_answer, question.incorrect_answers)
+            options = @current_game.randomize_answers(question.correct_answer, question.incorrect_answers)
             puts "--------------------"
-            puts "\nEnter your answer now (as a number)"
-            user_input = gets.strip.to_i - 1
-                if options[user_input] == question.correct_answer
-                    @score = @score + 1
+                user_input = 0
+                until [1,2,3,4].include? user_input do
+                    puts "Please enter a valid option."
+                    user_input = gets.strip.to_i
+                end
+                if options[user_input - 1] == question.correct_answer
+                    @current_game.score = @current_game.score + 1
                     puts Rainbow("\nCORRECT!").green
                     puts "\nGood job, NERD!"
-                    continue_quit
-                    puts "---------------------------------------------------------------------------------------"
+                    continue
+                    line_border
                 else 
-                    log_missed_question(question.text)
+                    @current_game.log_missed_question(question.text)
                     puts Rainbow("\nINCORRECT!").red
-                    puts "\nThe correct answer was #{question.correct_answer}"
+                    puts "\nThe correct answer was" + Rainbow(" #{question.correct_answer}").green
                     puts "\nMaybe you're not great with #{question.category}..."
-                    continue_quit
-                    puts "---------------------------------------------------------------------------------------"
+                    continue
+                    line_border
                 end
-                    @turn = @turn + 1
+            @current_game.turn = @current_game.turn + 1
         end
-        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        squiggle_border
         puts "\nGAME OVER"
-        puts "Press enter to see your score"
-        gets.strip
+        continue
         game_results
-    end
+    end    
 
     def game_results
-        puts "\nYour score is #{@score} out of #{Question.all.size}"
+        line_border
+        @player.scores << "#{@game_number} was a part of the #{id_name(@category)} category and the final score was #{@current_game.score} out of #{Question.all.size}!"
+        puts "\nYour score is #{@current_game.score} out of #{Question.all.size}"
+        puts "\nWould you like to see all of your Trivium scores?"
+            user_input = gets.strip.downcase
+                if user_input == "yes" || user_input == "y"
+                    all_scores
+                else
+                    puts "\nOk, fine!"
+                    continue
+                end
         puts "\nWould you like to see questions you answered incorrectly? Find out what else you can learn!"
             user_input = gets.strip.downcase
-            if user_input == "yes" || user_input == "y"
-                missed_questions
-            else
-                puts "\nOk, fine then."
-            start_over
+                if user_input == "yes" || user_input == "y"
+                    missed_questions
+                else
+                    puts "\nOk, fine!"
+                    continue
+                    start_over
             end
     end
 
     def missed_questions
-        @missed_questions.each.with_index(1) do |question, index|
+        line_border
+        @current_game.missed_questions.each.with_index(1) do |question, index|
             puts "\n#{index}. #{question}"
         end
-        puts "\nPress enter to continue"
-            gets.strip
+            continue
             start_over
     end
 
+    def all_scores
+        line_border
+        puts "\n#{@player_name}'s Trivium games:"
+            @player.scores.each do |score|
+            puts score
+        end
+    end
+
     def start_over
+        Question.destroy_all
+        line_border
         puts "\nWould you like to play again?"
-        user_input = gets.strip.downcase
-            if user_input == "yes" || user_input == "y"
-                puts "TRIVIA IS LIFE"
-                Question.destroy_all
-                # CLI.new.start
-            else
-                puts "OK, fine then...."
-            end
+        puts "Choose your option"
+        puts "1. Yes, play again with the same game options"
+        puts "2. Yes, but let me change my game options"
+        puts "3. Yes, but let me play as a different player"
+        puts "4. No thanks"
+            user_input = 0
+                until [1,2,3,4].include? user_input do
+                    puts "Please enter a valid option."
+                    user_input = gets.strip.to_i
+                end
+                case user_input
+                when 1
+                    puts "\nTRIVIA IS LIFE"
+                    confirm_options
+                when 2
+                    puts "\nLET'S CHANGE IT UP!"
+                    game_options
+                when 3
+                    puts "\nPLAYER 2 LET'S DO IT!"
+                    start
+                else 
+                    puts "\nOK, fine!"
+                end
+    end
+
+    def squiggle_border
+        puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    end
+
+    def line_border
+        puts "======================================================================================="
     end
 
 end

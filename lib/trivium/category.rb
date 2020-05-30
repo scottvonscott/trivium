@@ -1,5 +1,4 @@
 class Category
-    #keeps track of categories
 
     attr_accessor :name, :id
 
@@ -8,7 +7,13 @@ class Category
     def initialize (id:, name:)
         @name = name
         @id = id
-        @@all << self
+        save
+    end
+
+    def save
+        unless @@all.include?(self)
+            @@all << self
+        end
     end
 
     def self.all

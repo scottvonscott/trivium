@@ -1,6 +1,4 @@
 class Question
-    #keep track of question and answers
-    #save all the questions
 
     attr_accessor :text, :category, :difficulty, :correct_answer, :incorrect_answers
 
@@ -12,7 +10,13 @@ class Question
         @difficulty = difficulty
         @correct_answer = correct_answer
         @incorrect_answers = incorrect_answers
-        @@all << self
+        save
+    end
+
+    def save
+        unless @@all.include?(self)
+            @@all << self
+        end
     end
     
     def self.all

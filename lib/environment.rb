@@ -14,5 +14,5 @@ require_relative "./trivium/cli"
 require_relative "./trivium/category"
 require_relative "./trivium/question"
 require_relative "./trivium/game"
-require_relative "./tirvium/player"
+require_relative "./trivium/player"
 

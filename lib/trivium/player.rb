@@ -1,13 +1,13 @@
 class Player
 
-    attr_accessor :name, :scores
+    attr_accessor :name
 
     @@all = []
     
-
     def initialize(name)
         @name = name
         @scores = []
+        @games = []
         save
     end
 
@@ -15,6 +15,10 @@ class Player
         unless @@all.include?(self)
             @@all << self
         end
+    end
+
+    def self.all
+        @@all
     end
 
     def add_game(game)
@@ -27,14 +31,15 @@ class Player
     def self.create(player)
         player = Player.new(player)
         player.save
+        player
     end
 
     def self.find_by_name(name)
         self.all.detect {|p| p.name == name}
     end
 
-    def find_or_create_by_name(name)
-        if self.find_by_name (name) != nil
+    def self.find_or_create_by_name(name)
+        if self.find_by_name(name) != nil
             self.find_by_name (name)
         else
             self.create(name)
