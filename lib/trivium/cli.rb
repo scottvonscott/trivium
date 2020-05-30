@@ -4,7 +4,7 @@ class CLI
         puts "======================================================================================="
         puts "\nWELCOME TO THE WORLD'S MOST BASIC TRIVIA GAME!!!"
         API.get_categories
-        Category.new(id: 0, name: "mixed")    
+        Category.new(id: 0, name: "Mixed")    
         menu
     end
 
@@ -29,7 +29,7 @@ class CLI
             category.name
         end
         @sorted_array.each.with_index(1) do |category, index|
-            puts "#{index} #{category.name}"
+            puts "#{index}. #{category.name}"
         end
     end
 
@@ -113,8 +113,8 @@ class CLI
         puts "======================================================================================="
         puts "CONFIRM YOUR CHOICES"
         puts "\nYou're playing on #{@difficulty}, with #{@amount} questions from the #{id_name(@category)} category? Are you sure?"
-            puts "Type 'back' to choose again"
-            puts "Press enter to continue"
+            puts "\nType 'back' to choose again"
+            puts "\nPress enter to continue"
             user_input = gets.strip.downcase
             if user_input == "back"
                 game_options

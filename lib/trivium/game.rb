@@ -14,6 +14,16 @@ class Game
             play(Question.all)
     end
 
+    def continue_quit
+        puts "\nPress enter to continue"
+        puts "\nType 'quit' to quit Trivium"
+        user_input = gets.strip.downcase
+        if user_input == 'quit'
+            exit!
+        else
+        end
+    end
+
     def log_missed_question(question)
         @missed_questions << question
     end
@@ -76,18 +86,16 @@ class Game
         user_input = gets.strip.to_i - 1
             if options[user_input] == question.correct_answer
                 @score = @score + 1
-                puts "\nCORRECT!"
+                puts Rainbow("\nCORRECT!").green
                 puts "\nGood job, NERD!"
-                puts "Press enter to continue."
-                gets.strip
+                continue_quit
                 puts "---------------------------------------------------------------------------------------"
             else 
                 log_missed_question(question.text)
-                puts "\nINCORRECT!"
+                puts Rainbow("\nINCORRECT!").red
                 puts "\nThe correct answer was #{question.correct_answer}"
                 puts "\nMaybe you're not great with #{question.category}..."
-                puts "\nPress enter to continue"
-                gets.strip
+                continue_quit
                 puts "---------------------------------------------------------------------------------------"
             end
                 @turn = @turn + 1

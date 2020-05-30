@@ -1,7 +1,7 @@
 class Category
     #keeps track of categories
 
-    attr_accessor :name, :id, :quesiton
+    attr_accessor :name, :id
 
     @@all = []
 

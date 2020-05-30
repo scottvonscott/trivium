@@ -6,7 +6,7 @@ require 'net/http'
 require 'json'
 require 'unicode'
 require 'base64'
-
+require 'rainbow'
 
 
 require_relative "./trivium/api"
