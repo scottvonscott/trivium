@@ -137,7 +137,7 @@ class CLI
         @game_number = "Game #{@player.games.size + 1}"
         @current_game = Game.new(@game_number, @player, @difficulty, @amount, @category)
         squiggle_border
-        puts "A NEW GAME HAS STARTED!"
+        puts "\nA NEW GAME HAS STARTED!"
             continue
             play(Question.all)
     end
@@ -169,7 +169,7 @@ class CLI
                     continue
                     line_border
                 else 
-                    @current_game.log_missed_question(question.text)
+                    @current_game.log_missed_question(question)
                     puts Rainbow("\nINCORRECT!").red
                     puts "\nThe correct answer was" + Rainbow(" #{question.correct_answer}").green
                     puts "\nMaybe you're not great with #{question.category}..."
@@ -196,6 +196,7 @@ class CLI
                     puts "\nOk, fine!"
                     continue
                 end
+        line_border
         puts "\nWould you like to see questions you answered incorrectly? Find out what else you can learn!"
             user_input = gets.strip.downcase
                 if user_input == "yes" || user_input == "y"
@@ -210,7 +211,8 @@ class CLI
     def missed_questions
         line_border
         @current_game.missed_questions.each.with_index(1) do |question, index|
-            puts "\n#{index}. #{question}"
+            puts "\n#{index}. #{question.text}"
+            puts "\nCorrect answer:" + Rainbow(" #{question.correct_answer}").green
         end
             continue
             start_over

@@ -9,6 +9,7 @@ class Game
         @score = 0
         @turn = 1
         @missed_questions = []
+        @incorrect_answers =[]
         self.player=(player)
         API.get_trivia(difficulty, amount, category)
         save
