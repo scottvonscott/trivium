@@ -1,5 +1,4 @@
 class API
-    #make calls to API
 
     def self.get_categories
         url = "https://opentdb.com/api_category.php"

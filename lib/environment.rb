@@ -1,6 +1,3 @@
-#require gems we will use
-#require all lib files
-
 require 'pry'
 require 'net/http'
 require 'json'
