@@ -1,8 +1,6 @@
 # Trivium
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/trivium`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome to Trivium! This ruby gem is a CLI trivia game with accesss to tens of thousands of trivia quesitons from 24 different categories! Single players may customize their games by difficulty, category, or the amount of questions. Trivium keeps track of the score and the scores of a player's previous games. Players can print out the questions and answers they missed, that way they can find new subjects to learn about!
 
 ## Installation
 
@@ -22,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+From the Trivium file directory, run "ruby bin/trivium" to intiate the CLI and access the game's menu!
 
 ## Development
 
