@@ -213,7 +213,7 @@ class CLI
         @current_game.missed_questions.each.with_index(1) do |question, index|
             puts ""
             puts "\n#{index}. #{question.category}: #{question.text}"
-            puts "\nCorrect answer:" Rainbow("#{question.correct_answer}".green
+            puts "\nCorrect answer:" + Rainbow("#{question.correct_answer}").green
         end
             continue
             start_over
