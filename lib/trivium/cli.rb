@@ -137,7 +137,7 @@ class CLI
         @game_number = "Game #{@player.games.size + 1}"
         @current_game = Game.new(@game_number, @player, @difficulty, @amount, @category)
         squiggle_border
-        puts "\nA NEW GAME HAS STARTED!"
+        puts "A NEW GAME HAS STARTED!"
             continue
             play(Question.all)
     end
@@ -211,8 +211,9 @@ class CLI
     def missed_questions
         line_border
         @current_game.missed_questions.each.with_index(1) do |question, index|
-            puts "\n#{index}. #{question.text}"
-            puts "\nCorrect answer:" + Rainbow(" #{question.correct_answer}").green
+            puts ""
+            puts "\n#{index}. #{question.category}: #{question.text}"
+            puts "\nCorrect answer:" Rainbow("#{question.correct_answer}".green
         end
             continue
             start_over
